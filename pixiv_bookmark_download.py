@@ -41,8 +41,14 @@ for i in a:
 
 print(ids)
 
-id_list = list(ids)
-base_usrl = 'https://www.pixiv.net/member_illust.php?mode=medium&illust_id='+id_list[0]
+base_usrl = 'https://www.pixiv.net/member_illust.php?mode=medium&illust_id=34352238'
 
 new_html = se.get(base_usrl, headers=headers)
-print(new_html.text)
+# soup = BeautifulSoup(new_html.text, 'lxml')
+# a = soup.find_all('script')
+# for i in a:
+#     print(type(i))
+
+b = new_html.text
+c = b.find("illust: {")
+print(b[c:])
