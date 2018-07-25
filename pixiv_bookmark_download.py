@@ -79,7 +79,7 @@ def get_image_url(sess, all_ids, headers, retry=3):
     return img_urls
 
 
-def download_by_img(sess, img_urls, save_path, headers, retry=3):
+def download_by_img(sess, img_urls, save_path, headers):
     err_urls = []
 
     for i, url in enumerate(img_urls):
@@ -88,19 +88,16 @@ def download_by_img(sess, img_urls, save_path, headers, retry=3):
         refer = "https://www.pixiv.net/member_illust.php?mode=medium&illust_id=" + illust_id
         headers["Referer"] = refer
 
-        while retry:
-            try:
-                r = sess.get(url, headers=headers, timeout=10, stream=True)
-                if r.status_code == requests.codes.ok:
-                    img_data = r.content
-                    with open(save_path + name, 'wb') as handler:
-                        handler.write(img_data)
-                        print('{} have been downloaded'.format(url))
-                time.sleep(1)
-            except Exception:
-                retry -= 1
-                if retry == 0:
-                    err_urls.append(url)
+        try:
+            r = sess.get(url, headers=headers, timeout=10, stream=True)
+            if r.status_code == requests.codes.ok:
+                img_data = r.content
+                with open(save_path + name, 'wb') as handler:
+                    handler.write(img_data)
+                    print('{} have been downloaded'.format(url))
+            time.sleep(1)
+        except Exception:
+            err_urls.append(url)
 
     return err_urls
 
